@@ -1,7 +1,7 @@
 package program;
 
 public class Individuo {
-
+    double fitness;
     private int x1, x2;
 
     public Individuo(int x1, int x2) {
@@ -23,5 +23,13 @@ public class Individuo {
 
     public void setX2(int x2) {
         this.x2 = x2;
+    }
+
+    public double getFitness() {
+        return fitness;
+    }
+
+    public void setFitness(double fitness) {
+        this.fitness = fitness;
     }
 }
