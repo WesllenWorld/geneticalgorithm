@@ -1,10 +1,10 @@
 package program;
 
-public class Individup {
+public class Individuo {
 
     private int x1, x2;
 
-    public Individup(int x1, int x2) {
+    public Individuo(int x1, int x2) {
         this.x1 = x1;
         this.x2 = x2;
     }
