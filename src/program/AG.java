@@ -36,14 +36,28 @@ public class AG {
 
     public void crossover(Individuo i1, Individuo i2){
         Individuo filho1, filho2;
+        Random random = new Random();
+        int probMutacao;
 
         filho1 = new Individuo(i1.getX1(), i2.getX2());
         filho2 = new Individuo(i2.getX1(), i1.getX2());
+        
+        probMutacao = random.nextInt(10) + 1;
+        if(probMutacao == 1){
+            mutacao(filho1);
+        }
+        probMutacao = random.nextInt(10) + 1;
+        if(probMutacao == 1){
+        mutacao(filho2);
+        }
+
         populacao.add(filho2);
         populacao.add(filho1);
 
     }
 
+    public void mutacao(Individuo i){
 
+    }
 
 }
