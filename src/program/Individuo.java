@@ -1,6 +1,9 @@
 package program;
 
+import java.util.Random;
+
 public class Individuo {
+    Random mutacao;
     double fitness;
     private int x1, x2;
 
