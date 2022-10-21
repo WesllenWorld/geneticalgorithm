@@ -1,0 +1,160 @@
+
+package algoritmosgenéticos;
+
+import java.util.LinkedList;
+import java.util.Random;
+
+public class Algoritmo {
+
+    LinkedList<Individuo> populacao = new LinkedList<Individuo>();
+    LinkedList<Individuo> newPopulacao = new LinkedList<Individuo>();
+    LinkedList<Geração> listaGeracao = new LinkedList<Geração>();
+
+    Individuo Individuo1 = new Individuo();
+    Individuo Individuo2 = new Individuo();
+    Individuo Individuo3 = new Individuo();
+    Individuo Individuo4 = new Individuo();
+    Geração geracaoAtual = new Geração();
+    
+    Random random = new Random();
+
+    float aux;
+    int k;
+    int quantidade;
+
+    public Algoritmo() {
+        beginPopulacao();
+    }
+
+    //POPULAÇÃO
+    public void beginPopulacao() {
+        System.out.println("--------------------------------------------------------------------------------------------------------------------");
+        System.out.println("\t\t\t\t ALGORITMOS GENÉTICOS - Funções");
+        System.out.println("--------------------------------------------------------------------------------------------------------------------");
+
+        for (k = 1; k <= 8; k++) {
+
+            if (k == 1) {
+                Individuo bestIndividuo = new Individuo();
+
+                for (int i = 1; i <= 10; i++) {
+
+                    Individuo novoIndividuo = new Individuo();
+
+                    novoIndividuo.x1 = random.nextInt(100);
+                    novoIndividuo.x2 = random.nextInt(100);
+                    novoIndividuo.x3 = random.nextInt(100);
+                    novoIndividuo.x4 = random.nextInt(100);
+                    novoIndividuo.x5 = random.nextInt(100);
+                    
+                   // (x1 + x2 + (5 * x3) - x4) / x5
+                    novoIndividuo.fitness = (novoIndividuo.x1 
+                            + novoIndividuo.x2 
+                            + (5 * novoIndividuo.x3) 
+                            - novoIndividuo.x4) 
+                            / novoIndividuo.x5;
+
+                    System.out.println(i + " " + novoIndividuo);
+                    populacao.add(novoIndividuo);
+                    quantidade++;
+                    
+                    /*(2x1+x2-5x3)
+                     novoIndividuo.fitness = (2*novoIndividuo.x1 
+                            + novoIndividuo.x2 
+                            - 5 * novoIndividuo.x3); 
+                           
+
+                    System.out.println(i + " " + novoIndividuo);
+                    populacao.add(novoIndividuo);
+                    quantidade++;*/
+
+                    if (bestIndividuo.fitness < novoIndividuo.fitness) {
+                        bestIndividuo = novoIndividuo;
+                    }                    
+                }
+                
+                System.out.println("--------------------------------------------------------------------------------------------------------------------");
+                System.out.println("Geração: " + k + "  Melhor * - * : " + bestIndividuo);
+                System.out.println("--------------------------------------------------------------------------------------------------------------------");
+
+                geracaoAtual.geracao = populacao;
+                listaGeracao.add(geracaoAtual);
+                geracaoAtual.geracao = null;
+            } else {
+                System.out.println();
+
+                Individuo melhorIndividuo = new Individuo();
+                for (int i = 0; i < 5; i++) {
+
+                    int random1 = random.nextInt(10);
+                    int random2 = random.nextInt(10);
+
+                    Individuo1 = populacao.get(random1);
+                    Individuo2 = populacao.get(random2);
+
+                    if (Individuo1.fitness > Individuo2.fitness) {                                                             
+                    } else {
+                        Individuo3 = Individuo2;
+                    }
+
+                    Individuo1 = populacao.get(random.nextInt(10));
+                    Individuo2 = populacao.get(random.nextInt(10));
+                    if (Individuo1.fitness > Individuo2.fitness) {                                                                    
+                        Individuo4 = Individuo1;
+                    } else {
+                        Individuo4 = Individuo2;
+                    }
+
+                    //CRUZAMENTO
+                    aux = Individuo3.x1;
+                    Individuo3.x1 = Individuo4.x1;
+                    Individuo4.x1 = aux;
+
+                    aux = Individuo3.x4;
+                    Individuo3.x4 = Individuo4.x4;
+                    Individuo4.x4 = aux;
+
+                    //MUTAÇÃO
+                    double mutacao = random.nextDouble();
+                    if (mutacao > 0.4) {
+                        Individuo3.x2 = random.nextInt(100);
+                    }
+                    mutacao = random.nextDouble();
+                    if (mutacao > 0.4) {
+                        Individuo4.x2 = random.nextInt(100);
+                    }
+
+                    newPopulacao.add(Individuo3);
+                    newPopulacao.add(Individuo4);
+
+                    quantidade = quantidade + 2;
+
+                    if (melhorIndividuo.fitness < Individuo3.fitness) {
+                        melhorIndividuo = Individuo3;
+                    }
+                    if (melhorIndividuo.fitness < Individuo4.fitness) {
+                        melhorIndividuo = Individuo4;
+                    }
+
+                    System.out.println(Individuo3);
+                    System.out.println(Individuo4);
+                }
+                
+                System.out.println("--------------------------------------------------------------------------------------------------------------------");
+                System.out.println("-> Geração " + k + " << Melhor: * - * " + melhorIndividuo + " >>>");
+                System.out.println("--------------------------------------------------------------------------------------------------------------------");
+
+                geracaoAtual.geracao = newPopulacao;  
+                listaGeracao.add(geracaoAtual);
+                populacao = null;               
+                populacao = newPopulacao;           
+                newPopulacao = new LinkedList<Individuo>();
+
+                Individuo1 = new Individuo();
+                Individuo2 = new Individuo();
+                Individuo3 = new Individuo();
+                Individuo4 = new Individuo();
+            }
+        }
+    }
+}

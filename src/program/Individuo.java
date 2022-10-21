@@ -1,9 +1,6 @@
 package program;
 
-import java.util.Random;
-
 public class Individuo {
-    Random mutacao;
     double fitness;
     private int x1, x2;
 
@@ -34,5 +31,13 @@ public class Individuo {
 
     public void setFitness(double fitness) {
         this.fitness = fitness;
+    }
+
+    @Override
+    public String toString(){
+        
+        return "X1 e X2, respectivamente: "+ x1 + ", "+ x2 +"\n"
+        + "Fitness: " + fitness;
+
     }
 }

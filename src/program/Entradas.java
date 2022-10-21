@@ -26,13 +26,14 @@ public class Entradas {
         numeroDeGeracoes = numeroDeGeracoes(entrada);
 
         AG algGen = new AG(populacao, intervalo, taxaMutacao, numeroDeGeracoes);
+        entrada.close();
         algGen.executar();
     }
 
     private void gerarPopulacao(Scanner entrada, Random gerador) {
+        int nIndividuos;
         System.out.println("Opa, diz quantos indivíduos tu quer, meu patrão:");
-        int nIndividuos = entrada.nextInt();
-
+        nIndividuos = entrada.nextInt();
         for (int i = 0; i < nIndividuos; i++) {
             Individuo novo = new Individuo(gerador.nextInt(100) + 1, gerador.nextInt(100) + 1);
             populacao.add(novo);
@@ -54,13 +55,13 @@ public class Entradas {
         }
     }
 
-    private double taxaMutacao(Scanner entrada){
+    private double taxaMutacao(Scanner entrada) {
         double taxa;
         System.out.println("Beleza, mas diz aí a taxa de mutação pra eu testar um negóço aqui:");
         while (true) {
             taxa = entrada.nextDouble();
-            if (taxa < 0 || taxa > 100) {
-                System.out.println("Respeite a lógica e dê um número decimal entre 0 e 100!");
+            if (taxa < 0 || taxa > 1) {
+                System.out.println("Respeite a lógica e dê um número decimal entre 0 e 1!");
                 System.out.println("Tenta de novo:");
             } else {
                 return taxa;
@@ -68,7 +69,7 @@ public class Entradas {
         }
     }
 
-    public int numeroDeGeracoes(Scanner entrada){
+    public int numeroDeGeracoes(Scanner entrada) {
         int geracoes = 0;
 
         System.out.println("Chefia, manda o número de gerações:");
