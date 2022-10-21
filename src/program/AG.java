@@ -27,42 +27,46 @@ public class AG {
             funcFitness(ind);
         }
 
-        for (int i = 0; i < numeroDeGeracoes; i++) {
+        for (int i = 0; i < numeroDeGeracoes+1; i++) {
             populacao.sort(Comparator.comparing(Individuo::getFitness).reversed());
             novaPopulacao.add(populacao.get(0));
             novaPopulacao.add(populacao.get(1));
             Individuo melhor = populacao.get(0);
 
             for (int j = 0; j < populacao.size(); j++) {
-
+                Individuo pai1, pai2;
                 // torneios
                 montarTorneio(torneio);
-                Individuo pai1 = selecao(torneio);
+                pai1 = selecao(torneio);
                 torneio.clear();
 
+                //garantir que o mesmo pai não seja pai1 e pai2
+                boolean paiRepetido = true;
+                while(paiRepetido){
                 montarTorneio(torneio);
-                Individuo pai2 = selecao(torneio);
+                if(!torneio.contains(pai1)){
+                    //pai2 = selecao(torneio);
+                    //torneio.clear();
+                    break;
+                }
+                torneio.clear();
+                }
+
+                pai2 = selecao(torneio);
                 torneio.clear();
 
                 crossover(pai1, pai2, novaPopulacao);
-                
-                
-
             }
 
             populacao.stream().forEach(p -> System.out.println(p.toString()));
 
-            System.out.println("MELHOR:");
-            System.out.println(melhor.toString());
+            System.out.println('\n'+"MELHOR:");
+            System.out.println(melhor.toString()+'\n');
             
-          //  try {
-           //     TimeUnit.SECONDS.sleep(5);
-            //} catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-           //     e.printStackTrace();
-          //  }
             geracoes.add(populacao);
-            populacao = novaPopulacao;
+            populacao.clear();
+            populacao.addAll(novaPopulacao);
+            novaPopulacao.clear();
         }
     }
 
@@ -126,8 +130,9 @@ public class AG {
     }
 
     private Individuo torneioDoisIguais(Individuo um, Individuo dois) {
-        // compara e retorna maior
-        return um.getFitness() > dois.getFitness() ? um : dois;
+        // sorteia um dos dois iguais
+        Random escolha = new Random();
+        return escolha.nextInt(2)+1 == 1 ? um : dois;
     }
 
     public void funcFitness(Individuo ind) {
@@ -142,9 +147,12 @@ public class AG {
 
         filho1 = new Individuo(i1.getX1(), i2.getX2());
         mutacao(filho1);
+        
         filho2 = new Individuo(i2.getX1(), i1.getX2());
         mutacao(filho2);
 
+        funcFitness(filho1);
+        funcFitness(filho2);
         novaPopulacao.add(filho2);
         novaPopulacao.add(filho1);
     }
@@ -157,11 +165,11 @@ public class AG {
             switch (x) {
                 case 1:
                     i.setX1(random.nextInt(100) + 1);
-                    funcFitness(i);
+                    //funcFitness(i);
                     break;
                 case 2:
                     i.setX2(random.nextInt(100) + 1);
-                    funcFitness(i);
+                    //funcFitness(i);
                     break;
             }
         }
