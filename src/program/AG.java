@@ -3,10 +3,8 @@ package program;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 public class AG {
-    private ArrayList<ArrayList<Individuo>> geracoes;
     private ArrayList<Individuo> populacao;
     private int numeroDeGeracoes, intervalo;
     private double taxaMutacao;
@@ -20,18 +18,18 @@ public class AG {
 
     public void executar() {
         ArrayList<Individuo> torneio = new ArrayList<>(), novaPopulacao = new ArrayList<>();
-        geracoes = new ArrayList<ArrayList<Individuo>>();
 
-        // gerando o fitness de cada indivíduo da população
-        for (Individuo ind : populacao) {
-            funcFitness(ind);
-        }
+        for (int i = 0; i < numeroDeGeracoes + 1; i++) {
 
-        for (int i = 0; i < numeroDeGeracoes+1; i++) {
+            for (Individuo ind : populacao) {
+                double fitnessResultado = funcFitness(ind);
+                ind.setFitness(fitnessResultado);
+            }
+
             populacao.sort(Comparator.comparing(Individuo::getFitness).reversed());
-            novaPopulacao.add(populacao.get(0));
-            novaPopulacao.add(populacao.get(1));
+            
             Individuo melhor = populacao.get(0);
+            Individuo segundoMelhor = populacao.get(1);
 
             for (int j = 0; j < populacao.size(); j++) {
                 Individuo pai1, pai2;
@@ -42,32 +40,54 @@ public class AG {
 
                 //garantir que o mesmo pai não seja pai1 e pai2
                 boolean paiRepetido = true;
-                while(paiRepetido){
-                montarTorneio(torneio);
-                if(!torneio.contains(pai1)){
-                    //pai2 = selecao(torneio);
-                    //torneio.clear();
-                    break;
-                }
-                torneio.clear();
+                while (paiRepetido) {
+                    montarTorneio(torneio);
+                    if (!torneio.contains(pai1)) {
+                        break;
+                    }
+                    torneio.clear();
                 }
 
                 pai2 = selecao(torneio);
                 torneio.clear();
-
                 crossover(pai1, pai2, novaPopulacao);
             }
-
             populacao.stream().forEach(p -> System.out.println(p.toString()));
-
-            System.out.println('\n'+"MELHOR:");
-            System.out.println(melhor.toString()+'\n');
-            
-            geracoes.add(populacao);
-            populacao.clear();
-            populacao.addAll(novaPopulacao);
-            novaPopulacao.clear();
+            System.out.println('\n' + "MELHOR:");
+            System.out.println(melhor.toString() + '\n');
+            gerarNovaPopulacao(novaPopulacao, melhor, segundoMelhor);
         }
+    }
+
+    public void gerarNovaPopulacao(ArrayList<Individuo> novaPopulacao, Individuo elite1, Individuo elite2) {
+
+        for (Individuo ind : novaPopulacao) {
+            double fitnessResultado = funcFitness(ind);
+            ind.setFitness(fitnessResultado);
+        }
+        
+        populacao.remove(elite1);
+        populacao.remove(elite2);
+
+        ArrayList<Individuo> temp = new ArrayList<>();
+        temp.add(elite1);
+        temp.add(elite2);
+
+        for(int i = 0; i < intervalo - 2; i++){
+            temp.add(populacao.get(i));
+        }
+
+        novaPopulacao.sort(Comparator.comparing(Individuo::getFitness).reversed());
+       
+        for (int i = 0; i < intervalo; i++) {
+            temp.add(novaPopulacao.get(i));
+        }
+
+        //geracoes.add(populacao);
+        novaPopulacao = temp;
+        populacao.clear();
+        populacao.addAll(novaPopulacao);
+        novaPopulacao.clear();
     }
 
     public void montarTorneio(ArrayList<Individuo> torneio) {
@@ -132,14 +152,13 @@ public class AG {
     private Individuo torneioDoisIguais(Individuo um, Individuo dois) {
         // sorteia um dos dois iguais
         Random escolha = new Random();
-        return escolha.nextInt(2)+1 == 1 ? um : dois;
+        return escolha.nextInt(2) + 1 == 1 ? um : dois;
     }
 
-    public void funcFitness(Individuo ind) {
-        double fitness;
+    public double funcFitness(Individuo ind) {
+        int x1 = ind.getX1(), x2 = ind.getX2();
         // COLOCA A FUNÇÃO AQUI, ANIMAL
-        fitness = ind.getX1() - ind.getX2();
-        ind.setFitness(fitness);
+        return (x1 - Math.log(x2))/(Math.pow(x1, 2) - 3 * x2);
     }
 
     public void crossover(Individuo i1, Individuo i2, ArrayList<Individuo> novaPopulacao) {
@@ -147,12 +166,10 @@ public class AG {
 
         filho1 = new Individuo(i1.getX1(), i2.getX2());
         mutacao(filho1);
-        
+
         filho2 = new Individuo(i2.getX1(), i1.getX2());
         mutacao(filho2);
 
-        funcFitness(filho1);
-        funcFitness(filho2);
         novaPopulacao.add(filho2);
         novaPopulacao.add(filho1);
     }
@@ -165,11 +182,11 @@ public class AG {
             switch (x) {
                 case 1:
                     i.setX1(random.nextInt(100) + 1);
-                    //funcFitness(i);
+                    // funcFitness(i);
                     break;
                 case 2:
                     i.setX2(random.nextInt(100) + 1);
-                    //funcFitness(i);
+                    // funcFitness(i);
                     break;
             }
         }

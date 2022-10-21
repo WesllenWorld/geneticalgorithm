@@ -32,8 +32,15 @@ public class Entradas {
 
     private void gerarPopulacao(Scanner entrada, Random gerador) {
         int nIndividuos;
-        System.out.println("Opa, diz quantos indivíduos tu quer, meu patrão:");
-        nIndividuos = entrada.nextInt();
+        System.out.println("Opa, diz quantos indivíduos tu quer, meu patrão. Lembra de botar no mínimo 3:");
+        while(true){
+            nIndividuos = entrada.nextInt();
+            if(nIndividuos >= 3){
+                break;
+            }
+            System.out.println("Lembra de botar no mínimo 3:");
+        }
+
         for (int i = 0; i < nIndividuos; i++) {
             Individuo novo = new Individuo(gerador.nextInt(100) + 1, gerador.nextInt(100) + 1);
             populacao.add(novo);
@@ -43,10 +50,11 @@ public class Entradas {
     private int intervalo(Scanner entrada) {
         int intervalo = 0;
 
-        System.out.println("Agora manda o intervalo, parça:");
+        System.out.println("Agora manda o intervalo, parça (quantos vão ser substituídos)."+'\n'+
+        "Lembra que como tem elitismo de 2, os dois não estão inclusos, então tem que ser menor que "+(populacao.size()-2)+" :");
         while (true) {
             intervalo = entrada.nextInt();
-            if (intervalo < 1 || intervalo > populacao.size()) {
+            if (intervalo < 1 || intervalo > populacao.size() - 2) {
                 System.out.println("Respeite a lógica e dê um número dentro do intervalo!");
                 System.out.println("Tenta de novo:");
             } else {
