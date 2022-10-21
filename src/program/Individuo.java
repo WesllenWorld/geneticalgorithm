@@ -9,6 +9,10 @@ public class Individuo {
         this.x2 = x2;
     }
 
+    public Individuo(){
+        
+    }
+
     public int getX1() {
         return x1;
     }

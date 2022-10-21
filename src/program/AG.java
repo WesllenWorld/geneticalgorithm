@@ -18,18 +18,34 @@ public class AG {
 
     public void executar() {
         ArrayList<Individuo> torneio = new ArrayList<>(), novaPopulacao = new ArrayList<>();
+        int repetecoDeMelhor = 0;
+        Individuo ultimoMelhor = new Individuo();
+        boolean parada = false;
+
 
         for (int i = 0; i < numeroDeGeracoes + 1; i++) {
 
-            for (Individuo ind : populacao) {
-                double fitnessResultado = funcFitness(ind);
-                ind.setFitness(fitnessResultado);
-            }
+            fitnessSetUp(populacao);
 
             populacao.sort(Comparator.comparing(Individuo::getFitness).reversed());
             
             Individuo melhor = populacao.get(0);
             Individuo segundoMelhor = populacao.get(1);
+
+            if(i == 0){
+                ultimoMelhor = melhor;
+            }else{
+                if(ultimoMelhor == melhor){
+                    repetecoDeMelhor++;
+
+                    if(repetecoDeMelhor == 3){
+                        parada = true;
+                        break;
+                    }
+                }else{
+                    repetecoDeMelhor = 0;
+                }
+            }
 
             for (int j = 0; j < populacao.size(); j++) {
                 Individuo pai1, pai2;
@@ -57,14 +73,17 @@ public class AG {
             System.out.println(melhor.toString() + '\n');
             gerarNovaPopulacao(novaPopulacao, melhor, segundoMelhor);
         }
+
+        if(parada){
+            System.out.println("Encerramento por três gerações com o mesmo melhor indivíduo consecutivamente.");
+        }else{
+            System.out.println("Encerramento por limite de gerações.");
+        }
     }
 
     public void gerarNovaPopulacao(ArrayList<Individuo> novaPopulacao, Individuo elite1, Individuo elite2) {
 
-        for (Individuo ind : novaPopulacao) {
-            double fitnessResultado = funcFitness(ind);
-            ind.setFitness(fitnessResultado);
-        }
+        fitnessSetUp(novaPopulacao);
         
         populacao.remove(elite1);
         populacao.remove(elite2);
@@ -88,6 +107,13 @@ public class AG {
         populacao.clear();
         populacao.addAll(novaPopulacao);
         novaPopulacao.clear();
+    }
+
+    private void fitnessSetUp(ArrayList<Individuo> novaPopulacao) {
+        for (Individuo ind : novaPopulacao) {
+            double fitnessResultado = funcFitness(ind);
+            ind.setFitness(fitnessResultado);
+        }
     }
 
     public void montarTorneio(ArrayList<Individuo> torneio) {
