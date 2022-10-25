@@ -38,7 +38,7 @@ public class AG {
                 if(ultimoMelhor == melhor){
                     repetecoDeMelhor++;
 
-                    if(repetecoDeMelhor == 3){
+                    if(repetecoDeMelhor == 5){
                         parada = true;
                         break;
                     }
@@ -75,7 +75,7 @@ public class AG {
         }
 
         if(parada){
-            System.out.println("Encerramento por três gerações com o mesmo melhor indivíduo consecutivamente.");
+            System.out.println("Encerramento por três gerações com o mesmo melhor fitness consecutivamente.");
         }else{
             System.out.println("Encerramento por limite de gerações.");
         }
