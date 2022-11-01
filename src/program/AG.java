@@ -21,9 +21,9 @@ public class AG {
         int repetecoDeMelhor = 0;
         Individuo ultimoMelhor = new Individuo();
         boolean parada = false;
+        int i;
 
-
-        for (int i = 0; i < numeroDeGeracoes + 1; i++) {
+        for (i = 0; i < numeroDeGeracoes + 1; i++) {
 
             fitnessSetUp(populacao);
 
@@ -75,7 +75,8 @@ public class AG {
         }
 
         if(parada){
-            System.out.println("Encerramento por três gerações com o mesmo melhor fitness consecutivamente.");
+            System.out.println("Encerramento por cinco gerações com o mesmo melhor fitness consecutivamente.");
+            System.out.println("Geração: "+i);
         }else{
             System.out.println("Encerramento por limite de gerações.");
         }
@@ -183,7 +184,8 @@ public class AG {
 
     public double funcFitness(Individuo ind) {
         int x1 = ind.getX1(), x2 = ind.getX2();
-        // COLOCA A FUNÇÃO AQUI, ANIMAL
+        // COLOCA A FUNÇÃO AQUI
+        // return x1 - x2;
         return (x1 - Math.log(x2))/(Math.pow(x1, 2) - 3 * x2);
     }
 
@@ -208,11 +210,9 @@ public class AG {
             switch (x) {
                 case 1:
                     i.setX1(random.nextInt(100) + 1);
-                    // funcFitness(i);
                     break;
                 case 2:
                     i.setX2(random.nextInt(100) + 1);
-                    // funcFitness(i);
                     break;
             }
         }
